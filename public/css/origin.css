@@ -1,0 +1,144 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    background: linear-gradient(to right , #04103f, #01090c);
+    font-family:"Poppins", sans-serif;
+}
+.nav{
+    display: flex;
+    
+     
+   
+}
+.nav h1{
+    color: antiquewhite;
+    font-size: 50px;
+    margin: 40px 80px 0 80px;
+    font-weight: 800;
+    border:1px solid #fff;
+    border-radius: 12px;
+    
+    backdrop-filter:blur(10px);
+    padding: 10px;
+}
+.nav nav{
+    display: flex;
+    margin: 50px auto;
+    gap: 30px;
+     margin-right: 100px;
+    justify-content: space-between;
+    font-size: 30px;
+    
+}
+.nav nav a{
+    color: antiquewhite;
+    
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+.nav nav a:hover{
+    color: rgb(231, 178, 114);
+    transform: scale(1.08);
+}
+
+.first{
+    margin: 100px 0 0 80px;
+    padding: 30px;
+    font-weight: 600;
+    font-size: 80px;
+    word-spacing: 12px;
+    letter-spacing: 0.5px;
+    color: antiquewhite;
+    opacity: 0;
+    animation: slideright 1.6s ease-out forwards;
+
+}
+
+.second{
+    margin:80px 0 0 100px;
+    padding: 30px;
+    font-size: 72px;
+    color: antiquewhite;
+    font-weight: 600;
+    opacity: 0;
+    animation: slideright 1.6s ease-out forwards;
+
+}
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin:80px 0 80px 100px;
+    padding: 40px;
+
+}
+.btn  form button{
+    width: 180px;
+    height: 60px;
+    font-size: 32px;
+    font-weight: 600;
+    background: #02050d;
+    color: antiquewhite;
+    font-family:"Poppins", sans-serif ;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: 0.4s;
+}
+.btn  form button:hover{
+    border: none;
+    color: #02050d;
+    background: antiquewhite;
+    transform: scale(1.08);
+
+}
+
+.section p{
+    margin:80px 0 80px 100px;
+    padding: 30px;
+    font-size: 48px;
+    color: antiquewhite;
+    font-weight: 600;
+
+    box-sizing: border-box;
+    display: flex;
+    width: 1200px;
+ 
+    word-spacing: 5px;
+    letter-spacing: 0.3px;
+    opacity: 0;
+    animation: slideright 1.45s ease-out forwards;
+
+   
+}
+@keyframes  slideright{
+     from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.contact{
+    display: flex;
+    flex-direction: row;
+}
+.contact a{
+    display: flex;
+    flex-direction: row;
+    margin: 60px 0 60px 80px ;
+    padding: 60px;
+    font-size: 30px;
+    color: azure;
+    text-decoration: none;
+    transition: 0.3ss;
+}
+.contact a:hover{
+    color: burlywood;
+    transform: scale(1.05);
+}

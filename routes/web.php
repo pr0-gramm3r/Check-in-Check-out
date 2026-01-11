@@ -4,10 +4,27 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 
+Route::get('/', function () {
+    return view('origin');
+});
+
 Route::middleware("auth")->group(function(){
 
-    Route::get('/', [AttendanceController::class, 'index'])->name('home');
+    Route::get('/dashboard', [AttendanceController::class, 'index'])->name('home');
     // Route::view('/','welcome')->name("home");
+
+    // Dashboard for manager
+    Route::get('/admin/dashboard', [AttendanceController::class, 'adminDashboard'])->name('admin.dashboard');
+
+    // Delete user
+    Route::delete('/admin/user/{id}', function($id) {
+        \App\Models\User::findOrFail($id)->delete();
+        return back()->with('success', 'User deleted successfully');
+    })->name('admin.deleteUser');
+  
+    // Reset Password 
+    Route::post('/admin/user/{id}/reset-password', [AttendanceController::class, 'resetPassword'])
+    ->name('admin.resetPassword');
 
 });
 
