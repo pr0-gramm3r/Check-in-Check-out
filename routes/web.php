@@ -18,7 +18,7 @@ Route::middleware("auth")->group(function(){
 
     // Delete user
     Route::delete('/admin/user/{id}', function($id) {
-        \App\Models\User::findOrFail($id)->delete();
+        \App\Models\User::find($id)->delete();
         return back()->with('success', 'User deleted successfully');
     })->name('admin.deleteUser');
   

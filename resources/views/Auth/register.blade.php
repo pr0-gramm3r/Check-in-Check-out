@@ -65,25 +65,24 @@
     <div class="head">
         <h1>TimeFlow-AD.</h1>
     </div>
+        @if (session()->has("success"))
+            <div class="alert alert-success">
+                {{ session()->get("success") }}
+            </div>
+        @endif
+
+        @if (session()->has("error"))
+            <div class="alert alert-error">
+                {{ session()->get("error") }}
+            </div>
+        @endif
+
    <div class="main">
     <div class="conatiner">
         <h2>Register</h2>
-        <div>
-    @if (session()->has("success"))
-        <div>
-            {{ session()->get("success") }}
-        </div>
-    @endif
-    @if (session()->has("error"))
-        <div>
-            {{ session()->get("error") }}
-        </div>
-    @endif
-
-    
-
-        <form action="{{route("register.post")}}" method="POST">
-        @csrf
+        
+            <form action="{{route("register.post")}}" method="POST">
+            @csrf
         <div class="input-group">
 
         <input type="text" name="fullname" id="name" required autofocus>

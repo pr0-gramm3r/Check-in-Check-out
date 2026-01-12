@@ -27,6 +27,13 @@ class AuthController extends Controller
     }
 
     function registerPost(Request $req){
+
+            $req->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email', // This checks the 'users' table
+            'password' => 'required|min:6',
+    ]);
+
             $user= new User();
             $user->name = $req->fullname;
             $user->email = $req->email;
