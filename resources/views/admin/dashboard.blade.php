@@ -1,5 +1,7 @@
+<div>
 <h1>Manager Dashboard</h1>
-
+<a href="{{ route('home') }}">Dashboard</a>
+</div>
     <hr>
 
 {{-- Shows Recent Records --}}
