@@ -1,8 +1,28 @@
-<div>
-<h1>Manager Dashboard</h1>
-<a href="{{ route('home') }}">Dashboard</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+</head>
+<body>
+     <div class="nav">
+         <h1>TimeFlow-AD.</h1>
+       <nav>
+         <a href="{{ route('home') }}">Dashboard</a>
+       </nav>
+         </nav>
+        </div>
+   
+    
+   
+   <div class="manager">
+       <h1>Manager Dashboard</h1>
+     
 </div>
-    <hr>
+  
+    
 
 {{-- Shows Recent Records --}}
 <h2>All Attendance Records</h2>
@@ -33,11 +53,11 @@
     </tbody>
 </table>
 {{-- Adds Button for paggination --}}
-<div style="width: fit-content; margin-top: 2px;">
+<div style="width: fit-content; margin-top: 2px; padding: 25px; font-size: 25px;">
     {{ $allAttendances->links() }}
 </div>
 
-<hr>
+
 {{-- Management Panel --}}
 <h2>User Management (Delete/Ban)</h2>
 <table class="admin-table">
@@ -60,8 +80,8 @@
                 <form action="{{ route('admin.resetPassword', $user->id) }}" method="POST" style="display: flex; gap: 5px;">
                     @csrf
                     <input type="text" name="new_password" placeholder="New Password" required 
-                           style="padding: 5px; border: 2px solid #2b2e30; width: 100px;">
-                    <button type="submit" style="background: #2b2e30; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                           style="padding: 5px; border: 2px solid #b39a50; width: 100px;">
+                    <button type="submit" >
                         Reset
                     </button>
                 </form>
@@ -79,13 +99,13 @@
 </table>
 
 {{-- Adds Button for paggination --}}
-<div style="width: fit-content; margin-top: 2px;">
+<div style="width: fit-content; margin-top: 2px; padding: 25px; font-size: 25px;">
     {{ $users->links() }}
 </div>
 
 <br>
 <br>
-<hr>
+
 
 {{-- Employee monthly report here --}}
 <h2 style="margin-top: 40px;">Employee Monthly Work Report</h2>
@@ -119,20 +139,8 @@
 </table>
 
 {{-- Adds Button for paggination --}}
-<div style="width: fit-content; margin-top: 2px;">
+<div style="width: fit-content; margin-top: 2px; padding: 25px; font-size: 25px;">
     {{ $monthlyReports->links() }}
 </div>
-
-{{-- Styling --}}
-<div>
-    <style>
-        table,th,td{
-        border: 3px solid #2b2e30 !important;
-        font-size: larger;
-        border-collapse: collapse;
-    }
-    .w-5.h-5{
-        width:25px;
-    }
-    </style>
-</div>
+</body>
+</html>

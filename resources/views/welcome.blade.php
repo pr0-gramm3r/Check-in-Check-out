@@ -1,17 +1,22 @@
-{{-- Shows the massage --}}
-{{-- @if (session()->has("success"))
-    <div class="alert-success">
-        {{ session()->get("success") }} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="logo">
+        <h1>TimeFlow-AD.</h1>
     </div>
-@endif  --}}
-@if (session()->has("error"))   
-    <div class="alert-error">
-        {{ session()->get("error") }}
+    <div class="dash">
+        <h2> Dashboard</h2>
     </div>
-@endif
-
-{{-- Main Content --}}
-<h1>HI</h1>
+  
 
 @auth
     <h3>Welcome, {{ auth()->user()->name }}</h3>
@@ -32,7 +37,7 @@
         
         {{-- Only show this link if the logged-in user's ID is 1 --}}
         @if(in_array(auth()->user()->email, ['raj@gmail.com', 'ayush123@gmail.com'])){{--These two emails got the admin privillage u can change it later accordingly  --}}
-            <a href="{{ route('admin.dashboard') }}" style="color: red; font-weight: bold;">Manager Panel</a>
+            <a href="{{ route('admin.dashboard') }}" style="color: red; font-weight: bold; font-size: 25px; padding: 0px 0px 0px 42px;">Manager Panel</a>
         @endif
     </nav>
 @endauth
@@ -108,47 +113,11 @@
         {{ $history->links() }}
     </div>
 
-{{-- Styling --}}
-<style>
-    .w-5.h-5{
-        width:25px;
-    }
-    table,th,td{
-        border: 3px solid #2b2e30 !important;
-        font-size: larger;
-        border-collapse: collapse;
 
-    }
+
     
-    form{
-        padding:10px 20px;
-        margin: 23px;
-        
-    }
-    button{
-        cursor: pointer;
-    }
-    .alert-success{
-        background-color: #cbe4ce;
-        color: #155724;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #c3e6cb;
-        max-width: 325px;
-        border-radius: 5px;
-        font-size: 30px;
-        text-align: center
-    }
-    .alert-error{
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #f5c6cb;
-        border-radius: 5px;
-    }
     
-</style>
+
 
 {{-- Authantication --}}
 @auth
@@ -160,4 +129,6 @@
             </button>
         </form>
     </div>
-@endauth    
+@endauth
+</body>
+</html>

@@ -14,42 +14,44 @@ body{
 }
 .nav h1{
     color: antiquewhite;
-    font-size: 50px;
-    margin: 40px 80px 0 80px;
+    font-size: 25px;
+    margin: 20px 40px 10px 40px;
     font-weight: 800;
     border:1px solid #fff;
     border-radius: 12px;
-    
+    display: inline-block;
     backdrop-filter:blur(10px);
-    padding: 10px;
+    padding: 12px; 
+    
 }
 .nav nav{
     display: flex;
-    margin: 50px auto;
-    gap: 30px;
-     margin-right: 100px;
+    margin: 30px auto;
+    gap: 15px;
+     margin-right: 60px;
     justify-content: space-between;
-    font-size: 30px;
-    
+    font-size: 18px;
+     ;
 }
 .nav nav a{
     color: antiquewhite;
-    
+  
     text-decoration: none;
     font-weight: 600;
     transition: 0.3s;
 }
 .nav nav a:hover{
-    color: rgb(231, 178, 114);
+    color: rgb(242, 189, 119);
     transform: scale(1.08);
 }
 
+
 .first{
-    margin: 100px 0 0 80px;
+    margin: 60px 0 0 50px;
     padding: 30px;
     font-weight: 600;
-    font-size: 80px;
-    word-spacing: 12px;
+    font-size: 50px;
+    word-spacing: 8px;
     letter-spacing: 0.5px;
     color: antiquewhite;
     opacity: 0;
@@ -58,9 +60,9 @@ body{
 }
 
 .second{
-    margin:80px 0 0 100px;
+    margin:60px 0 0 50px;
     padding: 30px;
-    font-size: 72px;
+    font-size: 42px;
     color: antiquewhite;
     font-weight: 600;
     opacity: 0;
@@ -71,14 +73,14 @@ body{
     display: flex;
     align-items: center;
     justify-content: left;
-    margin:80px 0 80px 100px;
+    margin:30px 0 60px 60px;
     padding: 40px;
 
 }
 .btn  form button{
-    width: 180px;
-    height: 60px;
-    font-size: 32px;
+    width: 150px;
+    height: 45px;
+    font-size: 24px;
     font-weight: 600;
     background: #02050d;
     color: antiquewhite;
@@ -97,11 +99,11 @@ body{
 }
 
 .section p{
-    margin:80px 0 80px 100px;
-    padding: 30px;
-    font-size: 48px;
+    margin:60px 0 30px 50px;
+    padding: 15px;
+    font-size: 18px;
     color: antiquewhite;
-    font-weight: 600;
+    font-weight: 400;
 
     box-sizing: border-box;
     display: flex;
@@ -131,9 +133,9 @@ body{
 .contact a{
     display: flex;
     flex-direction: row;
-    margin: 60px 0 60px 80px ;
+    margin: 30px 0 30px 50px ;
     padding: 60px;
-    font-size: 30px;
+    font-size: 18px;
     color: azure;
     text-decoration: none;
     transition: 0.3ss;
