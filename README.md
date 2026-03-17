@@ -114,16 +114,24 @@ resources/views/welcome.blade.php
 
 ## 📸 Screens 
 
-* Login Page
-  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/67c9ba15-f9da-47b4-bdd1-3f4a1a9f21ea" />
 * Home
-  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/baa8593e-c4d3-43b2-89d9-9cf0a1e65dfc" />
-* Admin Panel
-  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f92c44ca-23a2-466a-8e92-d459a6d25cf8" />
-  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0ba99426-d997-42fa-a064-7526e9b45e09" />
-* Dashboard
-  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e13ae77c-17be-4582-b3c1-1498829c04e5" />
-  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/7bdfa89e-5e40-4013-8f6c-62f3e585082b" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/baa8593e-c4d3-43b2-89d9-9cf0a1e65dfc" />
+
+* Login Page
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/67c9ba15-f9da-47b4-bdd1-3f4a1a9f21ea" />
+
+* Register Page
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/24c850ed-501b-49ef-a598-1328440e0f93" />
+
+
+* Admin Panel  
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f92c44ca-23a2-466a-8e92-d459a6d25cf8" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0ba99426-d997-42fa-a064-7526e9b45e09" />
+
+* Dashboard  
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e13ae77c-17be-4582-b3c1-1498829c04e5" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0107cc3f-94e5-404f-bb0b-723e8e5443ef" />
+
   
 
 
