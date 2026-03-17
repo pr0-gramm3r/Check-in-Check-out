@@ -1,59 +1,198 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ⏱️ TimeFlow-AD — Check-in / Check-out Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern **attendance tracking system** built with Laravel that allows users to manage their daily check-in and check-out activities with a clean dashboard and admin controls.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 👤 User Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* 🔐 Authentication (Register / Login / Logout)
+* 🕒 Check-in & Check-out system
+* 📊 View current attendance status
+* ⏳ Track working duration
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 🛠️ Admin Features
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* 📋 View all attendance records
+* 👥 Manage users (Delete / Reset Password)
+* 📈 Monitor employee activity
+* 🔎 Pagination for large datasets
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🧠 Tech Stack
 
-### Premium Partners
+* **Backend:** PHP (Laravel)
+* **Frontend:** Blade Templates, HTML, CSS
+* **Database:** MySQL
+* **Styling:** Custom CSS + Tailwind (partial)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 📁 Project Structure
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```id="strc01"
+Check-in-Check-out/
+│
+├── app/                 # Core application logic
+├── resources/views/     # Blade templates (UI)
+├── public/css/          # Styling files
+├── routes/web.php       # Application routes
+├── tests/               # Test files
+└── README.md            # Project documentation
+```
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## ⚙️ Installation & Setup
 
-## Security Vulnerabilities
+### 1. Clone the repository
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash id="cmd01"
+git clone https://github.com/pr0-gramm3r/Toaster.git
+cd Check-in-Check-out
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 2. Install dependencies
+
+```bash id="cmd02"
+composer install
+npm install
+```
+
+---
+
+### 3. Configure environment
+
+```bash id="cmd03"
+cp .env.example .env
+php artisan key:generate
+```
+
+Update `.env` file with your database credentials.
+
+---
+
+### 4. Run migrations
+
+```bash id="cmd04"
+php artisan migrate
+```
+
+---
+
+### 5. Start the server
+
+```bash id="cmd05"
+php artisan serve
+```
+
+---
+
+## 🔑 Admin Access
+
+Admin access is currently controlled by specific emails:
+
+```id="adm01"
+raj@gmail.com
+ayush123@gmail.com
+```
+
+You can modify this logic inside:
+
+```id="adm02"
+resources/views/welcome.blade.php
+```
+
+---
+
+## 📸 Screens 
+
+* Login Page
+  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/67c9ba15-f9da-47b4-bdd1-3f4a1a9f21ea" />
+* Home
+  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/baa8593e-c4d3-43b2-89d9-9cf0a1e65dfc" />
+* Admin Panel
+  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f92c44ca-23a2-466a-8e92-d459a6d25cf8" />
+  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0ba99426-d997-42fa-a064-7526e9b45e09" />
+* Dashboard
+  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/7bdfa89e-5e40-4013-8f6c-62f3e585082b" />
+
+
+  
+
+---
+
+## 📌 Key Functionality
+
+### ✔ Check-in / Check-out Logic
+
+* Prevents multiple check-ins
+* Tracks session until check-out
+* Calculates total working duration
+
+---
+
+### ✔ Attendance Management
+
+* Stores user attendance records
+* Displays real-time status
+* Supports admin monitoring
+
+---
+
+## ⚠️ Current Limitations
+
+* ❌ No role-based authentication (uses email check)
+* ❌ No API support
+* ❌ No real-time updates
+* ❌ UI can be improved (mobile responsiveness)
+
+---
+
+## 🚀 Future Improvements
+
+* ✅ Implement proper role-based access control
+* ✅ Add REST API support
+* ✅ Improve UI with modern frameworks (React / Vue)
+* ✅ Add charts & analytics dashboard
+* ✅ Add notifications system (toast integration 👀)
+
+---
+
+## 💡 Why This Project?
+
+This project demonstrates:
+
+* Full-stack development using Laravel
+* Authentication & session management
+* Database handling & relationships
+* Admin dashboard design
+
+---
+
+## 🧑‍💻 Author
+
+Made with ❤️ by **pr0-gramm3r**
+
+---
+
+## ⭐ Support
+
+If you found this useful:
+
+* ⭐ Star the repo
+* 🍴 Fork it
+* 💡 Suggest improvements
+
+---
+
+## 📜 License
+
+This project is open-source and available for learning and development.
