@@ -122,7 +122,9 @@ resources/views/welcome.blade.php
   <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f92c44ca-23a2-466a-8e92-d459a6d25cf8" />
   <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0ba99426-d997-42fa-a064-7526e9b45e09" />
 * Dashboard
+  <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e13ae77c-17be-4582-b3c1-1498829c04e5" />
   <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/7bdfa89e-5e40-4013-8f6c-62f3e585082b" />
+  
 
 
   
