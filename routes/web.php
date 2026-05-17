@@ -15,56 +15,62 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-function attendiqStatusFor(?Attendance $attendance): string
-{
-    if (! $attendance) {
-        return 'absent';
+if (! function_exists('attendiqStatusFor')) {
+    function attendiqStatusFor(?Attendance $attendance): string
+    {
+        if (! $attendance) {
+            return 'absent';
+        }
+
+        $lateCutoff = $attendance->check_in?->copy()->setTime(9, 15);
+
+        if ($attendance->check_in && $lateCutoff && $attendance->check_in->greaterThan($lateCutoff)) {
+            return 'late';
+        }
+
+        return 'present';
     }
-
-    $lateCutoff = $attendance->check_in?->copy()->setTime(9, 15);
-
-    if ($attendance->check_in && $lateCutoff && $attendance->check_in->greaterThan($lateCutoff)) {
-        return 'late';
-    }
-
-    return 'present';
 }
 
-function attendiqUserPayload(User $user): array
-{
-    return [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'employee_id' => $user->employee_id ?: 'EMP'.str_pad((string) $user->id, 4, '0', STR_PAD_LEFT),
-        'phone' => $user->phone,
-        'department' => $user->departmentModel?->name ?: $user->department ?: 'Unassigned',
-        'department_id' => $user->department_id,
-        'role' => $user->role ?: 'Employee',
-        'status' => $user->status ?: 'active',
-        'joined' => optional($user->joined ?: $user->created_at)->toDateString(),
-        'avatar' => $user->avatar,
-    ];
+if (! function_exists('attendiqUserPayload')) {
+    function attendiqUserPayload(User $user): array
+    {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'employee_id' => $user->employee_id ?: 'EMP'.str_pad((string) $user->id, 4, '0', STR_PAD_LEFT),
+            'phone' => $user->phone,
+            'department' => $user->departmentModel?->name ?: $user->department ?: 'Unassigned',
+            'department_id' => $user->department_id,
+            'role' => $user->role ?: 'Employee',
+            'status' => $user->status ?: 'active',
+            'joined' => optional($user->joined ?: $user->created_at)->toDateString(),
+            'avatar' => $user->avatar,
+        ];
+    }
 }
 
-function attendiqAttendancePayload(Attendance $attendance): array
-{
-    $user = $attendance->user;
+if (! function_exists('attendiqAttendancePayload')) {
+    function attendiqAttendancePayload(Attendance $attendance): array
+    {
+        $user = $attendance->user;
 
-    return [
-        'id' => $attendance->id,
-        'employee' => $user ? attendiqUserPayload($user) : [
-            'name' => 'Deleted User',
-            'department' => 'Unassigned',
-            'employee_id' => 'N/A',
-        ],
-        'date' => optional($attendance->check_in ?: $attendance->created_at)->toDateString(),
-        'check_in' => $attendance->check_in,
-        'check_out' => $attendance->check_out,
-        'status' => attendiqStatusFor($attendance),
-        'location' => $attendance->location,
-        'notes' => $attendance->notes,
-    ];
+        return [
+            'id' => $attendance->id,
+            'employee' => $user ? attendiqUserPayload($user) : [
+                'name' => 'Deleted User',
+                'department' => 'Unassigned',
+                'employee_id' => 'N/A',
+            ],
+            'date' => optional($attendance->check_in ?: $attendance->created_at)->toDateString(),
+            'check_in' => $attendance->check_in,
+            'check_out' => $attendance->check_out,
+            'status' => attendiqStatusFor($attendance),
+            'location' => $attendance->location,
+            'notes' => $attendance->notes,
+        ];
+    }
 }
 
 Route::get('/', function () {
