@@ -3,13 +3,16 @@ FROM php:8.2-cli
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpq-dev libonig-dev libxml2-dev \
-    nodejs npm \
     && docker-php-ext-install pdo pdo_pgsql mbstring xml
+
+# Install Node.js 20 (official NodeSource repo)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install Node + Yarn
+# Install Yarn
 RUN npm install -g yarn
 
 # Set working directory
@@ -30,7 +33,6 @@ RUN chmod -R 775 storage bootstrap/cache
 # Expose port
 EXPOSE 8000
 
-# Start Laravel
 CMD php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
