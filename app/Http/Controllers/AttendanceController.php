@@ -49,41 +49,40 @@ class AttendanceController extends Controller
     }
     // Admin Dashboard
     public function adminDashboard()
-    { 
-        // monthly report query
+    {
+        // Access control first
+        if (!in_array(auth()->user()->email, ['raj@gmail.com', 'ayush123@gmail.com'])) {
+            return redirect('/dashboard')->with('error', 'You do not have manager access.');
+        }
+
+        // Then run queries
         $monthlyReports = \App\Models\Attendance::join('users', 'attendances.user_id', '=', 'users.id')
         ->select(
             'users.name',
             'users.id',
-            \DB::raw('YEAR(check_in) as year'),
-            \DB::raw('MONTH(check_in) as month'),
-            \DB::raw('SUM(TIMESTAMPDIFF(SECOND, check_in, check_out)) as total_seconds')
+            \DB::raw('EXTRACT(YEAR FROM check_in)::integer as year'),
+            \DB::raw('EXTRACT(MONTH FROM check_in)::integer as month'),
+            \DB::raw('SUM(EXTRACT(EPOCH FROM (check_out - check_in)))::integer as total_seconds')
         )
         ->whereNotNull('check_out')
-        ->groupBy('users.id','users.name', 'year', 'month')
+        ->groupBy('users.id', 'users.name', 'year', 'month')
         ->orderBy('year', 'desc')
         ->orderBy('month', 'desc')
         ->paginate(5, ['*'], 'report_page');
+            // Fetch all attendance records, grouped by user
+            $allAttendances = \App\Models\Attendance::with('user')
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(10, ['*'], 'attendance_page');
+                            
+            // Fetch all users for the management list
+            $users = \App\Models\User::paginate(10, ['*'], 'user_page');
 
-        // Access control: Only allow specific emails
-        if (!in_array(auth()->user()->email, ['raj@gmail.com', 'ayush123@gmail.com'])) {
-        return redirect('/dashboard')->with('error', 'You do not have manager access.');
-    }//Ony these two emails have the access to manager panel
+            return view('admin.dashboard', compact('allAttendances', 'users','monthlyReports'));
+        }
 
-        // Fetch all attendance records, grouped by user
-        $allAttendances = \App\Models\Attendance::with('user')
-                        ->orderBy('created_at', 'desc')
-                        ->paginate(10, ['*'], 'attendance_page');
-                        
-        // Fetch all users for the management list
-        $users = \App\Models\User::paginate(10, ['*'], 'user_page');
-
-        return view('admin.dashboard', compact('allAttendances', 'users','monthlyReports'));
-    }
-
-    // Reset User Password
-    public function resetPassword(Request $request, $id) 
-{
+        // Reset User Password
+        public function resetPassword(Request $request, $id) 
+    {
     // Validate that a password was actually typed
     $request->validate([
         'new_password' => 'required|min:6'
