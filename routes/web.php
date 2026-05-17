@@ -8,70 +8,13 @@ use App\Models\Attendance;
 use App\Models\Department;
 use App\Models\Shift;
 use App\Models\User;
+use App\Support\AttendiqPayload;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-
-if (! function_exists('attendiqStatusFor')) {
-    function attendiqStatusFor(?Attendance $attendance): string
-    {
-        if (! $attendance) {
-            return 'absent';
-        }
-
-        $lateCutoff = $attendance->check_in?->copy()->setTime(9, 15);
-
-        if ($attendance->check_in && $lateCutoff && $attendance->check_in->greaterThan($lateCutoff)) {
-            return 'late';
-        }
-
-        return 'present';
-    }
-}
-
-if (! function_exists('attendiqUserPayload')) {
-    function attendiqUserPayload(User $user): array
-    {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'employee_id' => $user->employee_id ?: 'EMP'.str_pad((string) $user->id, 4, '0', STR_PAD_LEFT),
-            'phone' => $user->phone,
-            'department' => $user->departmentModel?->name ?: $user->department ?: 'Unassigned',
-            'department_id' => $user->department_id,
-            'role' => $user->role ?: 'Employee',
-            'status' => $user->status ?: 'active',
-            'joined' => optional($user->joined ?: $user->created_at)->toDateString(),
-            'avatar' => $user->avatar,
-        ];
-    }
-}
-
-if (! function_exists('attendiqAttendancePayload')) {
-    function attendiqAttendancePayload(Attendance $attendance): array
-    {
-        $user = $attendance->user;
-
-        return [
-            'id' => $attendance->id,
-            'employee' => $user ? attendiqUserPayload($user) : [
-                'name' => 'Deleted User',
-                'department' => 'Unassigned',
-                'employee_id' => 'N/A',
-            ],
-            'date' => optional($attendance->check_in ?: $attendance->created_at)->toDateString(),
-            'check_in' => $attendance->check_in,
-            'check_out' => $attendance->check_out,
-            'status' => attendiqStatusFor($attendance),
-            'location' => $attendance->location,
-            'notes' => $attendance->notes,
-        ];
-    }
-}
 
 Route::get('/', function () {
     return view('app');
@@ -129,7 +72,7 @@ Route::prefix('api')->group(function () {
 
         return response()->json([
             'token' => $request->session()->getId(),
-            'user' => attendiqUserPayload($user->fresh('departmentModel')),
+            'user' => AttendiqPayload::user($user->fresh('departmentModel')),
         ], 201);
     });
 
@@ -137,7 +80,7 @@ Route::prefix('api')->group(function () {
         Route::get('/auth/me', function (Request $request) {
             return response()->json([
                 'token' => $request->session()->getId(),
-                'user' => attendiqUserPayload($request->user()->load('departmentModel')),
+                'user' => AttendiqPayload::user($request->user()->load('departmentModel')),
             ]);
         });
 
@@ -167,7 +110,7 @@ Route::prefix('api')->group(function () {
                 ->get()
                 ->unique('user_id');
             $present = $todayRecords->count();
-            $late = $todayRecords->filter(fn ($record) => attendiqStatusFor($record) === 'late')->count();
+            $late = $todayRecords->filter(fn ($record) => AttendiqPayload::statusFor($record) === 'late')->count();
             $avgCheckin = $todayRecords->filter(fn ($record) => $record->check_in)->avg(fn ($record) => $record->check_in->secondsSinceMidnight());
 
             return response()->json([
@@ -188,7 +131,7 @@ Route::prefix('api')->group(function () {
                     ->limit(10)
                     ->get()
                     ->flatMap(function (Attendance $record) {
-                        $employee = $record->user ? attendiqUserPayload($record->user) : ['name' => 'Deleted User', 'department' => 'Unassigned'];
+                        $employee = $record->user ? AttendiqPayload::user($record->user) : ['name' => 'Deleted User', 'department' => 'Unassigned'];
                         $events = [[
                             'id' => $record->id.'-in',
                             'employee' => $employee,
@@ -257,7 +200,7 @@ Route::prefix('api')->group(function () {
                 $query->whereDate('check_in', $request->date('date'));
             }
 
-            $records = $query->get()->map(fn (Attendance $attendance) => attendiqAttendancePayload($attendance));
+            $records = $query->get()->map(fn (Attendance $attendance) => AttendiqPayload::attendance($attendance));
 
             if ($request->filled('status') && $request->status !== 'all') {
                 $records = $records->where('status', $request->status)->values();
@@ -281,7 +224,7 @@ Route::prefix('api')->group(function () {
                     ->latest()
                     ->limit(30)
                     ->get()
-                    ->map(fn (Attendance $attendance) => attendiqAttendancePayload($attendance))
+                    ->map(fn (Attendance $attendance) => AttendiqPayload::attendance($attendance))
             );
         });
 
@@ -345,8 +288,8 @@ Route::prefix('api')->group(function () {
                     ->get()
                     ->map(function (User $user) use ($todayRecords) {
                         return [
-                            ...attendiqUserPayload($user),
-                            'today_status' => attendiqStatusFor($todayRecords->get($user->id)),
+                            ...AttendiqPayload::user($user),
+                            'today_status' => AttendiqPayload::statusFor($todayRecords->get($user->id)),
                         ];
                     })
             );
@@ -372,7 +315,7 @@ Route::prefix('api')->group(function () {
                 'password' => Hash::make(Str::random(16)),
             ]);
 
-            return response()->json(attendiqUserPayload($user->fresh('departmentModel')), 201);
+            return response()->json(AttendiqPayload::user($user->fresh('departmentModel')), 201);
         });
 
         Route::put('/employees/{user}', function (Request $request, User $user) {
@@ -394,7 +337,7 @@ Route::prefix('api')->group(function () {
                 'department' => $department?->name,
             ]);
 
-            return response()->json(attendiqUserPayload($user->fresh('departmentModel')));
+            return response()->json(AttendiqPayload::user($user->fresh('departmentModel')));
         });
 
         Route::delete('/employees/{user}', function (User $user) {
@@ -537,7 +480,7 @@ Route::prefix('api')->group(function () {
 
             $user->update($data);
 
-            return response()->json(attendiqUserPayload($user->fresh('departmentModel')));
+            return response()->json(AttendiqPayload::user($user->fresh('departmentModel')));
         });
 
         Route::put('/profile/password', function (Request $request) {
@@ -561,7 +504,7 @@ Route::prefix('api')->group(function () {
             $users = User::where('status', '!=', 'inactive')->count();
             $records = Attendance::with('user')->get();
             $presentDays = $records->count();
-            $lateDays = $records->filter(fn ($record) => attendiqStatusFor($record) === 'late')->count();
+            $lateDays = $records->filter(fn ($record) => AttendiqPayload::statusFor($record) === 'late')->count();
             $avgMinutes = $records->filter(fn ($record) => $record->check_in && $record->check_out)
                 ->avg(fn ($record) => $record->check_in->diffInMinutes($record->check_out));
 
@@ -579,7 +522,7 @@ Route::prefix('api')->group(function () {
             $today = Carbon::today();
             $todayRecords = $records->filter(fn ($record) => $record->check_in?->isSameDay($today))->unique('user_id');
             $presentToday = $todayRecords->count();
-            $lateToday = $todayRecords->filter(fn ($record) => attendiqStatusFor($record) === 'late')->count();
+            $lateToday = $todayRecords->filter(fn ($record) => AttendiqPayload::statusFor($record) === 'late')->count();
             $absentToday = max($activeUsers->count() - $presentToday, 0);
 
             $monthly = collect(range(8, 0))->map(function ($offset) use ($records, $activeUsers) {
@@ -587,7 +530,7 @@ Route::prefix('api')->group(function () {
                 $monthRecords = $records->filter(fn ($record) => $record->check_in?->isSameMonth($month));
                 $workdays = max($activeUsers->count() * max($month->daysInMonth, 1), 1);
                 $present = $monthRecords->count();
-                $late = $monthRecords->filter(fn ($record) => attendiqStatusFor($record) === 'late')->count();
+                $late = $monthRecords->filter(fn ($record) => AttendiqPayload::statusFor($record) === 'late')->count();
 
                 return [
                     'month' => $month->format('M'),
@@ -615,7 +558,7 @@ Route::prefix('api')->group(function () {
                 'summary' => [
                     'avg_attendance_rate' => $activeUsers->count() ? round(($presentToday / $activeUsers->count()) * 100, 1) : 0,
                     'total_present_days' => $records->count(),
-                    'late_arrivals' => $records->filter(fn ($record) => attendiqStatusFor($record) === 'late')->count(),
+                    'late_arrivals' => $records->filter(fn ($record) => AttendiqPayload::statusFor($record) === 'late')->count(),
                     'avg_work_hours_day' => $avgMinutes ? round($avgMinutes / 60, 1) : 0,
                 ],
                 'monthly' => $monthly,
@@ -633,7 +576,7 @@ Route::prefix('api')->group(function () {
             return response()->json(
                 Attendance::with(['user.departmentModel'])
                     ->get()
-                    ->filter(fn ($record) => attendiqStatusFor($record) === 'late')
+                    ->filter(fn ($record) => AttendiqPayload::statusFor($record) === 'late')
                     ->groupBy('user_id')
                     ->map(function ($records) {
                         $first = $records->first();
@@ -643,7 +586,7 @@ Route::prefix('api')->group(function () {
 
                         return [
                             'name' => $first->user?->name ?? 'Deleted User',
-                            'dept' => $first->user ? attendiqUserPayload($first->user)['department'] : 'Unassigned',
+                            'dept' => $first->user ? AttendiqPayload::user($first->user)['department'] : 'Unassigned',
                             'times' => $records->count(),
                             'avg_delay' => $avgDelay.' min',
                         ];
@@ -655,7 +598,7 @@ Route::prefix('api')->group(function () {
         });
 
         Route::get('/reports/export', function () {
-            $rows = Attendance::with(['user.departmentModel'])->latest()->get()->map(fn ($record) => attendiqAttendancePayload($record));
+            $rows = Attendance::with(['user.departmentModel'])->latest()->get()->map(fn ($record) => AttendiqPayload::attendance($record));
             $csv = "Employee,Employee ID,Department,Date,Check In,Check Out,Status,Location\n";
             foreach ($rows as $row) {
                 $csv .= implode(',', [
