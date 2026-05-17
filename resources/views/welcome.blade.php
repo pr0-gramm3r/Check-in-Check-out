@@ -42,6 +42,34 @@
     </nav>
 @endauth
 
+{{-- Shows current time --}}
+
+  {{-- <h1 id="current-time"></h1>
+
+  
+<script>
+
+let time = document.getElementById('current-time');
+
+setInterval(() => {
+    let d = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+    
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // The hour '0' should be '12'
+
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    time.innerHTML = hours + ':' + minutes + ':' + seconds + ' ' + ampm;        
+}, 1000);
+</script> --}}
+
+
 {{-- Shows Checkin and check out status --}}
 <div >
     @if(!$currentAttendance)
