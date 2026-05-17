@@ -1,0 +1,66 @@
+services:
+  - type: web
+    name: check-in-check-out
+    runtime: php
+    plan: free
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+      php artisan migrate --force
+      yarn install
+      yarn build
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_NAME
+        value: TimeFlow-AD
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        fromService:
+          type: web
+          name: check-in-check-out
+          property: host
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: check-in-check-out-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: check-in-check-out-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: check-in-check-out-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: check-in-check-out-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: check-in-check-out-db
+          property: password
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+
+databases:
+  - name: check-in-check-out-db
+    plan: free
+    databaseName: checkin_checkout
+    user: checkin_user
