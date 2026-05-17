@@ -55,20 +55,33 @@ class AttendanceController extends Controller
             return redirect('/dashboard')->with('error', 'You do not have manager access.');
         }
 
-        // Then run queries
-        $monthlyReports = \App\Models\Attendance::join('users', 'attendances.user_id', '=', 'users.id')
-        ->select(
-            'users.name',
-            'users.id',
-            \DB::raw('EXTRACT(YEAR FROM check_in)::integer as year'),
-            \DB::raw('EXTRACT(MONTH FROM check_in)::integer as month'),
-            \DB::raw('SUM(EXTRACT(EPOCH FROM (check_out - check_in)))::integer as total_seconds')
-        )
-        ->whereNotNull('check_out')
-        ->groupBy('users.id', 'users.name', 'year', 'month')
-        ->orderBy('year', 'desc')
-        ->orderBy('month', 'desc')
-        ->paginate(5, ['*'], 'report_page');
+        // Database-neutral monthly totals, compatible with MySQL and PostgreSQL.
+        $monthlyReportRows = \App\Models\Attendance::with('user')
+            ->whereNotNull('check_out')
+            ->get()
+            ->groupBy(fn ($attendance) => $attendance->user_id.'-'.$attendance->check_in->format('Y-m'))
+            ->map(function ($records) {
+                $first = $records->first();
+
+                return (object) [
+                    'name' => $first->user?->name ?? 'Deleted User',
+                    'id' => $first->user_id,
+                    'year' => (int) $first->check_in->format('Y'),
+                    'month' => (int) $first->check_in->format('m'),
+                    'total_seconds' => $records->sum(fn ($record) => $record->check_in->diffInSeconds($record->check_out)),
+                ];
+            })
+            ->sortByDesc(fn ($row) => sprintf('%04d-%02d', $row->year, $row->month))
+            ->values();
+
+        $reportPage = request()->integer('report_page', 1);
+        $monthlyReports = new \Illuminate\Pagination\LengthAwarePaginator(
+            $monthlyReportRows->forPage($reportPage, 5)->values(),
+            $monthlyReportRows->count(),
+            5,
+            $reportPage,
+            ['path' => request()->url(), 'pageName' => 'report_page']
+        );
             // Fetch all attendance records, grouped by user
             $allAttendances = \App\Models\Attendance::with('user')
                             ->orderBy('created_at', 'desc')

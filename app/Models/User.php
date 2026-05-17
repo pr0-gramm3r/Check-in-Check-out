@@ -20,6 +20,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'employee_id',
+        'phone',
+        'department_id',
+        'department',
+        'role',
+        'status',
+        'joined',
+        'avatar',
         'password',
     ];
 
@@ -42,6 +50,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'joined' => 'date',
             'password' => 'hashed',
         ];
     }
@@ -51,4 +60,9 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class);
         
     }   
+
+    public function departmentModel()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
 }
