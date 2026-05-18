@@ -15,7 +15,7 @@
 
 ---
 
-## πŸ"– Overview
+## 📖 Overview
 
 **AttendIQ** is a modern, production-ready attendance management system for teams and organisations. It replaces spreadsheets and manual registers with a clean SPA experience — employees clock in and out with a single click, while administrators monitor real-time presence, generate reports, and manage departments and shifts — all from one unified dashboard.
 
@@ -25,36 +25,43 @@
 
 ## ✨ Features
 
-### πŸ'€ Employee
+### 👤 Employee
+
 - One-click **Check-in / Check-out** with duplicate-check protection
 - Personal attendance history (last 30 records)
 - Live check-in status and working-duration counter
 - Profile management with avatar support
 
-### πŸ"Š Admin Dashboard
+### 📊 Admin Dashboard
+
 - Real-time KPI cards — total employees, present, absent, late today, attendance rate
 - **7-day attendance bar chart** (Recharts)
 - Live activity feed of the 10 most recent check-in / check-out events
 - Full attendance log with **date, status, and name/ID search filters**
 
 ### 👥 Employee Management
+
 - Create, view, and manage employee profiles
 - Assign roles (`Admin` / `Employee`), departments, employee IDs
 - Set and update employee status (active / inactive)
 
-### 🏒 Departments & Shifts
+### 🏢 Departments & Shifts
+
 - Create and manage departments
 - Configure named shifts with start/end times, grace-minute buffers, and working days
 
-### πŸ"ˆ Reports
-- Filterable attendance reports page
-- CSV-export ready data layer
+### 📈 Reports
 
-### βš™οΈ Settings
+- Filterable attendance reports page
+- CSV export
+
+### ⚙️ Settings
+
 - App-wide settings stored in a key-value `app_settings` table
 - Late arrival threshold configurable (default: 09:15)
 
 ### 🌗 UI / UX
+
 - Dark / light **theme toggle** with persistent preference
 - React Hot Toast notifications
 - Fully responsive with Tailwind CSS
@@ -63,50 +70,50 @@
 
 ## 🧠 Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend framework | Laravel 12 (PHP 8.2) |
-| Frontend framework | React 18 (Vite + JSX) |
-| Routing (frontend) | React Router v6 |
-| Forms & validation | React Hook Form + Zod |
-| Charts | Recharts |
-| Styling | Tailwind CSS 3 |
-| Icons | Lucide React |
-| Notifications | React Hot Toast |
-| Date handling | date-fns + Carbon |
-| Database | PostgreSQL (production) / SQLite (local) |
-| Auth | Laravel session auth (cookie-based) |
-| Tests | Pest PHP |
-| Containerisation | Docker |
-| CI / Deploy | Render (render.yaml included) |
+| Layer              | Technology                             |
+|--------------------|----------------------------------------|
+| Backend framework  | Laravel 12 (PHP 8.2)                   |
+| Frontend framework | React 18 (Vite + JSX)                  |
+| Routing (frontend) | React Router v6                        |
+| Forms & validation | React Hook Form + Zod                  |
+| Charts             | Recharts                               |
+| Styling            | Tailwind CSS 3                         |
+| Icons              | Lucide React                           |
+| Notifications      | React Hot Toast                        |
+| Date handling      | date-fns + Carbon                      |
+| Database           | PostgreSQL (production) / SQLite (dev) |
+| Auth               | Laravel session auth (cookie-based)    |
+| Tests              | Pest PHP                               |
+| Containerisation   | Docker                                 |
+| CI / Deploy        | Render (`render.yaml` included)        |
 
 ---
 
-## πŸ" Project Structure
+## 📁 Project Structure
 
 ```
 Check-in-Check-out/
-β"œβ"€β"€ app/
-β"‚   β"œβ"€β"€ Http/Controllers/     # AuthController, AttendanceController
-β"‚   β"œβ"€β"€ Models/               # User, Attendance, Department, Shift, AppSetting
-β"‚   β"œβ"€β"€ Providers/
-β"‚   └── Support/
-β"‚       └── AttendiqPayload.php  # Serialisers + late-status logic
-β"œβ"€β"€ database/
-β"‚   β"œβ"€β"€ migrations/           # Users, Attendances, Departments, Shifts, Settings
-β"‚   β"œβ"€β"€ factories/
-β"‚   └── seeders/
-β"œβ"€β"€ resources/js/
-β"‚   β"œβ"€β"€ pages/                # DashboardPage, AttendancePage, EmployeesPage,
-β"‚   β"‚                         #   DepartmentsPage, ReportsPage, SettingsPage,
-β"‚   β"‚                         #   ProfilePage, LoginPage, SignupPage
-β"‚   β"œβ"€β"€ components/           # Shared UI components + AppLayout
-β"‚   β"œβ"€β"€ context/              # AuthContext, ThemeContext
-β"‚   β"œβ"€β"€ services/             # Axios API service layer
-β"‚   └── utils/
-β"œβ"€β"€ routes/web.php            # All API routes (Laravel prefix: /api/*)
-β"œβ"€β"€ Dockerfile
-β"œβ"€β"€ render.yaml               # One-click Render deploy config
+├── app/
+│   ├── Http/Controllers/     # AuthController, AttendanceController
+│   ├── Models/               # User, Attendance, Department, Shift, AppSetting
+│   ├── Providers/
+│   └── Support/
+│       └── AttendiqPayload.php  # Serialisers + late-status logic
+├── database/
+│   ├── migrations/           # Users, Attendances, Departments, Shifts, Settings
+│   ├── factories/
+│   └── seeders/
+├── resources/js/
+│   ├── pages/                # DashboardPage, AttendancePage, EmployeesPage,
+│   │                         #   DepartmentsPage, ReportsPage, SettingsPage,
+│   │                         #   ProfilePage, LoginPage, SignupPage
+│   ├── components/           # Shared UI components + AppLayout
+│   ├── context/              # AuthContext, ThemeContext
+│   ├── services/             # Axios API service layer
+│   └── utils/
+├── routes/web.php            # All API routes (Laravel prefix: /api/*)
+├── Dockerfile
+├── render.yaml               # One-click Render deploy config
 └── composer.json / package.json
 ```
 
@@ -117,36 +124,39 @@ Check-in-Check-out/
 All endpoints are prefixed with `/api`. Protected routes require an active session.
 
 ### Auth
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/auth/login` | Login with email + password |
-| `POST` | `/api/auth/register` | Register a new employee account |
-| `GET` | `/api/auth/me` | Get the authenticated user |
-| `POST` | `/api/auth/logout` | Logout (auto check-out if checked in) |
+
+| Method | Endpoint             | Description                           |
+|--------|----------------------|---------------------------------------|
+| POST   | `/api/auth/login`    | Login with email + password           |
+| POST   | `/api/auth/register` | Register a new employee account       |
+| GET    | `/api/auth/me`       | Get the authenticated user            |
+| POST   | `/api/auth/logout`   | Logout (auto check-out if checked in) |
 
 ### Attendance
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/attendance` | All records (filterable by date, status, search) |
-| `GET` | `/api/attendance/today` | Authenticated user's today status |
-| `GET` | `/api/attendance/my` | Personal history (last 30) |
-| `POST` | `/api/attendance/check-in` | Check in (with optional location & notes) |
-| `POST` | `/api/attendance/check-out` | Check out current session |
-| `DELETE` | `/api/attendance/{id}` | Delete a record (admin) |
+
+| Method | Endpoint                    | Description                                    |
+|--------|-----------------------------|------------------------------------------------|
+| GET    | `/api/attendance`           | All records (filterable by date, status, name) |
+| GET    | `/api/attendance/today`     | Authenticated user's today status              |
+| GET    | `/api/attendance/my`        | Personal history (last 30)                     |
+| POST   | `/api/attendance/check-in`  | Check in (with optional location & notes)      |
+| POST   | `/api/attendance/check-out` | Check out current session                      |
+| DELETE | `/api/attendance/{id}`      | Delete a record **(Admin only)**               |
 
 ### Dashboard
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/dashboard/stats` | KPI summary for today |
-| `GET` | `/api/dashboard/activity` | Last 10 check-in/out events |
-| `GET` | `/api/dashboard/live` | Current check-in state + active count |
-| `GET` | `/api/dashboard/weekly-chart` | 7-day present/absent data |
 
-### Employees, Departments, Shifts, Settings — full CRUD endpoints also included.
+| Method | Endpoint                      | Description                    |
+|--------|-------------------------------|--------------------------------|
+| GET    | `/api/dashboard/stats`        | KPI summary for today          |
+| GET    | `/api/dashboard/activity`     | Last 10 check-in/out events    |
+| GET    | `/api/dashboard/live`         | Current check-in state + count |
+| GET    | `/api/dashboard/weekly-chart` | 7-day present/absent data      |
+
+Employees, Departments, Shifts, and Settings also have full CRUD endpoints, all guarded by Admin middleware.
 
 ---
 
-## πŸš€ Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -179,7 +189,6 @@ Update `.env` with your database credentials. For local SQLite:
 
 ```env
 DB_CONNECTION=sqlite
-# DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD can be removed
 ```
 
 For PostgreSQL:
@@ -228,7 +237,7 @@ docker run -p 8000:8000 \
 A `render.yaml` is included for zero-config deployment on [Render](https://render.com).
 
 1. Fork / push this repo to your GitHub account.
-2. In the Render dashboard, click **New → Blueprint** and point it at your repo.
+2. In the Render dashboard, click **New > Blueprint** and point it at your repo.
 3. Render automatically provisions a **PostgreSQL** database and a **web service** with all environment variables wired up.
 4. The Docker build handles `composer install`, `yarn build`, migrations, and `php artisan serve`.
 
@@ -246,24 +255,24 @@ Tests are written with **Pest PHP**. Feature and unit test suites live in `tests
 
 ---
 
-## πŸ"' Role & Permission Model
+## 🔒 Role & Permission Model
 
-| Role | Access |
-|---|---|
-| `Employee` | Own check-in/out, own history, profile |
-| `Admin` | All of the above + manage all employees, departments, shifts, attendance records, settings |
+| Role     | Access                                                                                 |
+|----------|----------------------------------------------------------------------------------------|
+| Employee | Own check-in/out, own attendance history, profile                                      |
+| Admin    | All of the above + manage employees, departments, shifts, attendance records, settings |
 
-Roles are stored on the `users` table. Role-based middleware guards admin-only API endpoints.
+Roles are stored on the `users` table. A dedicated `AdminMiddleware` guards all admin-only API routes, returning `403 Forbidden` to non-admins.
 
 ---
 
 ## ⏰ Late Arrival Logic
 
-The `AttendiqPayload::statusFor()` helper marks an attendance record as **late** when `check_in` is after **09:15** (configurable via the `AppSetting` table). Status values: `present`, `late`, `absent`.
+`AttendiqPayload::statusFor()` marks a record as **late** when `check_in` is after **09:15**. Status values: `present`, `late`, `absent`.
 
 ---
 
-## πŸ—ΊοΈ Roadmap
+## 🗺️ Roadmap
 
 - [ ] Email / push notifications for late arrivals
 - [ ] Leave management module
@@ -274,15 +283,15 @@ The `AttendiqPayload::statusFor()` helper marks an attendance record as **late**
 
 ---
 
-## 🀝 Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please open an issue first to discuss what you'd like to change, then submit a pull request.
+Contributions are welcome. Please open an issue first to discuss what you would like to change, then submit a pull request.
 
 ---
 
-## 🧑‍πŸ'» Author
+## 🧑‍💻 Author
 
-Made with ❀️ by **[pr0-gramm3r](https://github.com/pr0-gramm3r)**
+Made with ❤️ by **[pr0-gramm3r](https://github.com/pr0-gramm3r)**
 
 ---
 
@@ -291,11 +300,11 @@ Made with ❀️ by **[pr0-gramm3r](https://github.com/pr0-gramm3r)**
 If AttendIQ saves you time:
 
 - ⭐ Star the repo
-- 🍴 Fork it and build on it
-- πŸ'¬ Open an issue with feedback or ideas
+- 🍴 Fork it and build on top of it
+- 💬 Open an issue with feedback or ideas
 
 ---
 
-## πŸ"œ License
+## 📜 License
 
 This project is open-source, available under the [MIT License](LICENSE).
