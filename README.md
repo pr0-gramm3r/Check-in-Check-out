@@ -1,208 +1,301 @@
-# ⏱️ TimeFlow-AD — Check-in / Check-out Management System
+<div align="center">
 
-A modern **attendance tracking system** built with Laravel that allows users to manage their daily check-in and check-out activities with a clean dashboard and admin controls.
+# ⏱️ AttendIQ — Check-in / Check-out Management System
+
+**A full-stack employee attendance platform built with Laravel 12 + React 18**
+
+[![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
+[![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+
+</div>
 
 ---
 
-## 🚀 Features
+## πŸ"– Overview
 
-### 👤 User Features
+**AttendIQ** is a modern, production-ready attendance management system for teams and organisations. It replaces spreadsheets and manual registers with a clean SPA experience — employees clock in and out with a single click, while administrators monitor real-time presence, generate reports, and manage departments and shifts — all from one unified dashboard.
 
-* 🔐 Authentication (Register / Login / Logout)
-* 🕒 Check-in & Check-out system
-* 📊 View current attendance status
-* ⏳ Track working duration
+> The app name used in deployment is **TimeFlow-AD**; the internal codename is **AttendIQ**.
 
 ---
 
-### 🛠️ Admin Features
+## ✨ Features
 
-* 📋 View all attendance records
-* 👥 Manage users (Delete / Reset Password)
-* 📈 Monitor employee activity
-* 🔎 Pagination for large datasets
+### πŸ'€ Employee
+- One-click **Check-in / Check-out** with duplicate-check protection
+- Personal attendance history (last 30 records)
+- Live check-in status and working-duration counter
+- Profile management with avatar support
+
+### πŸ"Š Admin Dashboard
+- Real-time KPI cards — total employees, present, absent, late today, attendance rate
+- **7-day attendance bar chart** (Recharts)
+- Live activity feed of the 10 most recent check-in / check-out events
+- Full attendance log with **date, status, and name/ID search filters**
+
+### 👥 Employee Management
+- Create, view, and manage employee profiles
+- Assign roles (`Admin` / `Employee`), departments, employee IDs
+- Set and update employee status (active / inactive)
+
+### 🏒 Departments & Shifts
+- Create and manage departments
+- Configure named shifts with start/end times, grace-minute buffers, and working days
+
+### πŸ"ˆ Reports
+- Filterable attendance reports page
+- CSV-export ready data layer
+
+### βš™οΈ Settings
+- App-wide settings stored in a key-value `app_settings` table
+- Late arrival threshold configurable (default: 09:15)
+
+### 🌗 UI / UX
+- Dark / light **theme toggle** with persistent preference
+- React Hot Toast notifications
+- Fully responsive with Tailwind CSS
 
 ---
 
 ## 🧠 Tech Stack
 
-* **Backend:** PHP (Laravel)
-* **Frontend:** Blade Templates, HTML, CSS
-* **Database:** MySQL
-* **Styling:** Custom CSS + Tailwind (partial)
+| Layer | Technology |
+|---|---|
+| Backend framework | Laravel 12 (PHP 8.2) |
+| Frontend framework | React 18 (Vite + JSX) |
+| Routing (frontend) | React Router v6 |
+| Forms & validation | React Hook Form + Zod |
+| Charts | Recharts |
+| Styling | Tailwind CSS 3 |
+| Icons | Lucide React |
+| Notifications | React Hot Toast |
+| Date handling | date-fns + Carbon |
+| Database | PostgreSQL (production) / SQLite (local) |
+| Auth | Laravel session auth (cookie-based) |
+| Tests | Pest PHP |
+| Containerisation | Docker |
+| CI / Deploy | Render (render.yaml included) |
 
 ---
 
-## 📁 Project Structure
+## πŸ" Project Structure
 
-```id="strc01"
+```
 Check-in-Check-out/
-│
-├── app/                 # Core application logic
-├── resources/views/     # Blade templates (UI)
-├── public/css/          # Styling files
-├── routes/web.php       # Application routes
-├── tests/               # Test files
-└── README.md            # Project documentation
+β"œβ"€β"€ app/
+β"‚   β"œβ"€β"€ Http/Controllers/     # AuthController, AttendanceController
+β"‚   β"œβ"€β"€ Models/               # User, Attendance, Department, Shift, AppSetting
+β"‚   β"œβ"€β"€ Providers/
+β"‚   └── Support/
+β"‚       └── AttendiqPayload.php  # Serialisers + late-status logic
+β"œβ"€β"€ database/
+β"‚   β"œβ"€β"€ migrations/           # Users, Attendances, Departments, Shifts, Settings
+β"‚   β"œβ"€β"€ factories/
+β"‚   └── seeders/
+β"œβ"€β"€ resources/js/
+β"‚   β"œβ"€β"€ pages/                # DashboardPage, AttendancePage, EmployeesPage,
+β"‚   β"‚                         #   DepartmentsPage, ReportsPage, SettingsPage,
+β"‚   β"‚                         #   ProfilePage, LoginPage, SignupPage
+β"‚   β"œβ"€β"€ components/           # Shared UI components + AppLayout
+β"‚   β"œβ"€β"€ context/              # AuthContext, ThemeContext
+β"‚   β"œβ"€β"€ services/             # Axios API service layer
+β"‚   └── utils/
+β"œβ"€β"€ routes/web.php            # All API routes (Laravel prefix: /api/*)
+β"œβ"€β"€ Dockerfile
+β"œβ"€β"€ render.yaml               # One-click Render deploy config
+└── composer.json / package.json
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## 🌐 API Endpoints
 
-### 1. Clone the repository
+All endpoints are prefixed with `/api`. Protected routes require an active session.
 
-```bash id="cmd01"
-git clone https://github.com/pr0-gramm3r/Toaster.git
+### Auth
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/login` | Login with email + password |
+| `POST` | `/api/auth/register` | Register a new employee account |
+| `GET` | `/api/auth/me` | Get the authenticated user |
+| `POST` | `/api/auth/logout` | Logout (auto check-out if checked in) |
+
+### Attendance
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/attendance` | All records (filterable by date, status, search) |
+| `GET` | `/api/attendance/today` | Authenticated user's today status |
+| `GET` | `/api/attendance/my` | Personal history (last 30) |
+| `POST` | `/api/attendance/check-in` | Check in (with optional location & notes) |
+| `POST` | `/api/attendance/check-out` | Check out current session |
+| `DELETE` | `/api/attendance/{id}` | Delete a record (admin) |
+
+### Dashboard
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/dashboard/stats` | KPI summary for today |
+| `GET` | `/api/dashboard/activity` | Last 10 check-in/out events |
+| `GET` | `/api/dashboard/live` | Current check-in state + active count |
+| `GET` | `/api/dashboard/weekly-chart` | 7-day present/absent data |
+
+### Employees, Departments, Shifts, Settings — full CRUD endpoints also included.
+
+---
+
+## πŸš€ Getting Started
+
+### Prerequisites
+
+- PHP 8.2+, Composer
+- Node.js 20+, npm / yarn
+- PostgreSQL **or** SQLite (for local dev)
+
+### 1 — Clone & install
+
+```bash
+git clone https://github.com/pr0-gramm3r/Check-in-Check-out.git
 cd Check-in-Check-out
 ```
 
----
+The project ships a one-command setup script:
 
-### 2. Install dependencies
-
-```bash id="cmd02"
-composer install
-npm install
+```bash
+composer run setup
 ```
 
----
+This runs `composer install`, copies `.env.example` to `.env`, generates the app key, runs migrations, and builds the frontend assets.
 
-### 3. Configure environment
+### 2 — Configure environment
 
-```bash id="cmd03"
+```bash
 cp .env.example .env
-php artisan key:generate
 ```
 
-Update `.env` file with your database credentials.
+Update `.env` with your database credentials. For local SQLite:
+
+```env
+DB_CONNECTION=sqlite
+# DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD can be removed
+```
+
+For PostgreSQL:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=checkin_checkout
+DB_USERNAME=your_user
+DB_PASSWORD=your_password
+```
+
+### 3 — Run in development
+
+```bash
+composer run dev
+```
+
+This concurrently starts the Laravel server, queue worker, and Vite dev server with HMR.
+
+Visit **http://localhost:8000** — the React SPA is served from the single Laravel route.
 
 ---
 
-### 4. Run migrations
+## 🐳 Docker
 
-```bash id="cmd04"
-php artisan migrate
+Build and run the app as a container:
+
+```bash
+docker build -t attendiq .
+docker run -p 8000:8000 \
+  -e APP_KEY=base64:YOUR_KEY \
+  -e DB_CONNECTION=pgsql \
+  -e DB_HOST=your_db_host \
+  -e DB_DATABASE=checkin_checkout \
+  -e DB_USERNAME=your_user \
+  -e DB_PASSWORD=your_password \
+  attendiq
 ```
 
 ---
 
-### 5. Start the server
+## ☁️ Deploy to Render
 
-```bash id="cmd05"
-php artisan serve
+A `render.yaml` is included for zero-config deployment on [Render](https://render.com).
+
+1. Fork / push this repo to your GitHub account.
+2. In the Render dashboard, click **New → Blueprint** and point it at your repo.
+3. Render automatically provisions a **PostgreSQL** database and a **web service** with all environment variables wired up.
+4. The Docker build handles `composer install`, `yarn build`, migrations, and `php artisan serve`.
+
+---
+
+## 🧪 Testing
+
+```bash
+composer run test
+# or directly:
+php artisan test
 ```
 
----
-
-## 🔑 Admin Access
-
-Admin access is currently controlled by specific emails:
-
-```id="adm01"
-raj@gmail.com
-ayush123@gmail.com
-```
-
-You can modify this logic inside:
-
-```id="adm02"
-resources/views/welcome.blade.php
-```
+Tests are written with **Pest PHP**. Feature and unit test suites live in `tests/Feature/` and `tests/Unit/`.
 
 ---
 
-## 📸 Screens 
+## πŸ"' Role & Permission Model
 
-* Home
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/baa8593e-c4d3-43b2-89d9-9cf0a1e65dfc" />
+| Role | Access |
+|---|---|
+| `Employee` | Own check-in/out, own history, profile |
+| `Admin` | All of the above + manage all employees, departments, shifts, attendance records, settings |
 
-* Login Page
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/67c9ba15-f9da-47b4-bdd1-3f4a1a9f21ea" />
-
-* Register Page
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/24c850ed-501b-49ef-a598-1328440e0f93" />
-
-
-* Admin Panel  
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f92c44ca-23a2-466a-8e92-d459a6d25cf8" />
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0ba99426-d997-42fa-a064-7526e9b45e09" />
-
-* Dashboard  
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e13ae77c-17be-4582-b3c1-1498829c04e5" />
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/0107cc3f-94e5-404f-bb0b-723e8e5443ef" />
-
-  
-
-
-  
+Roles are stored on the `users` table. Role-based middleware guards admin-only API endpoints.
 
 ---
 
-## 📌 Key Functionality
+## ⏰ Late Arrival Logic
 
-### ✔ Check-in / Check-out Logic
-
-* Prevents multiple check-ins
-* Tracks session until check-out
-* Calculates total working duration
+The `AttendiqPayload::statusFor()` helper marks an attendance record as **late** when `check_in` is after **09:15** (configurable via the `AppSetting` table). Status values: `present`, `late`, `absent`.
 
 ---
 
-### ✔ Attendance Management
+## πŸ—ΊοΈ Roadmap
 
-* Stores user attendance records
-* Displays real-time status
-* Supports admin monitoring
-
----
-
-## ⚠️ Current Limitations
-
-* ❌ No role-based authentication (uses email check)
-* ❌ No API support
-* ❌ No real-time updates
-* ❌ UI can be improved (mobile responsiveness)
+- [ ] Email / push notifications for late arrivals
+- [ ] Leave management module
+- [ ] CSV / PDF report export
+- [ ] Geolocation enforcement on check-in
+- [ ] Mobile app (React Native)
+- [ ] Webhook integrations (Slack, Teams)
 
 ---
 
-## 🚀 Future Improvements
+## 🀝 Contributing
 
-* ✅ Implement proper role-based access control
-* ✅ Add REST API support
-* ✅ Improve UI with modern frameworks (React / Vue)
-* ✅ Add charts & analytics dashboard
-* ✅ Add notifications system (toast integration 👀)
+Contributions are welcome! Please open an issue first to discuss what you'd like to change, then submit a pull request.
 
 ---
 
-## 💡 Why This Project?
+## 🧑‍πŸ'» Author
 
-This project demonstrates:
-
-* Full-stack development using Laravel
-* Authentication & session management
-* Database handling & relationships
-* Admin dashboard design
-
----
-
-## 🧑‍💻 Author
-
-Made with ❤️ by **pr0-gramm3r**
+Made with ❀️ by **[pr0-gramm3r](https://github.com/pr0-gramm3r)**
 
 ---
 
 ## ⭐ Support
 
-If you found this useful:
+If AttendIQ saves you time:
 
-* ⭐ Star the repo
-* 🍴 Fork it
-* 💡 Suggest improvements
+- ⭐ Star the repo
+- 🍴 Fork it and build on it
+- πŸ'¬ Open an issue with feedback or ideas
 
 ---
 
-## 📜 License
+## πŸ"œ License
 
-This project is open-source and available for learning and development.
+This project is open-source, available under the [MIT License](LICENSE).
