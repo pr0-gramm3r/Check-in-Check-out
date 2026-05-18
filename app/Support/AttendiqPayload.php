@@ -33,6 +33,7 @@ class AttendiqPayload
             'department' => $user->departmentModel?->name ?: $user->department ?: 'Unassigned',
             'department_id' => $user->department_id,
             'role' => $user->role ?: 'Employee',
+            'is_admin' => $user->isAdmin(),
             'status' => $user->status ?: 'active',
             'joined' => optional($user->joined ?: $user->created_at)->toDateString(),
             'avatar' => $user->avatar,

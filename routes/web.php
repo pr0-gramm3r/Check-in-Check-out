@@ -37,7 +37,7 @@ Route::prefix('api')->group(function () {
 
         return response()->json([
             'token' => $request->session()->getId(),
-            'user' => Auth::user(),
+            'user' => AttendiqPayload::user(Auth::user()->load('departmentModel')),
         ]);
     });
 
@@ -101,6 +101,7 @@ Route::prefix('api')->group(function () {
             return response()->json(['message' => 'Logged out successfully.']);
         });
 
+        Route::middleware('admin')->group(function () {
         Route::get('/dashboard/stats', function () {
             $today = Carbon::today();
             $users = User::with('departmentModel')->get();
@@ -179,6 +180,7 @@ Route::prefix('api')->group(function () {
                 })->values()
             );
         });
+        });
 
         Route::get('/attendance/today', function () {
             $attendance = Attendance::where('user_id', Auth::id())
@@ -215,7 +217,7 @@ Route::prefix('api')->group(function () {
             }
 
             return response()->json($records->values());
-        });
+        })->middleware('admin');
 
         Route::get('/attendance/my', function () {
             return response()->json(
@@ -273,6 +275,7 @@ Route::prefix('api')->group(function () {
             ]);
         });
 
+        Route::middleware('admin')->group(function () {
         Route::delete('/attendance/{attendance}', function (Attendance $attendance) {
             $attendance->delete();
 
@@ -468,6 +471,7 @@ Route::prefix('api')->group(function () {
 
             return response()->json(['message' => 'Shift deleted.']);
         });
+        });
 
         Route::put('/profile', function (Request $request) {
             $user = $request->user();
@@ -475,7 +479,6 @@ Route::prefix('api')->group(function () {
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
                 'phone' => ['nullable', 'string', 'max:50'],
-                'role' => ['nullable', 'string', 'max:255'],
             ]);
 
             $user->update($data);
@@ -500,6 +503,7 @@ Route::prefix('api')->group(function () {
             return response()->json(['message' => 'Password changed successfully.']);
         });
 
+        Route::middleware('admin')->group(function () {
         Route::get('/reports/attendance-summary', function () {
             $users = User::where('status', '!=', 'inactive')->count();
             $records = Attendance::with('user')->get();
@@ -618,6 +622,7 @@ Route::prefix('api')->group(function () {
                 'Content-Disposition' => 'attachment; filename="attendance-report.csv"',
             ]);
         });
+        });
     });
 });
 
@@ -626,6 +631,7 @@ Route::middleware("auth")->group(function(){
     Route::get('/dashboard', fn () => view('app'))->name('home');
     // Route::view('/','welcome')->name("home");
 
+    Route::middleware('admin')->group(function () {
     // Dashboard for manager
     Route::get('/admin/dashboard', [AttendanceController::class, 'adminDashboard'])->name('admin.dashboard');
 
@@ -638,6 +644,7 @@ Route::middleware("auth")->group(function(){
     // Reset Password 
     Route::post('/admin/user/{id}/reset-password', [AttendanceController::class, 'resetPassword'])
     ->name('admin.resetPassword');
+    });
 
 });
 

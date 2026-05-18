@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const [stats, setStats] = useState(EMPTY_STATS)
   const [weekly, setWeekly] = useState([])
   const [activity, setActivity] = useState([])
@@ -50,16 +50,37 @@ export default function DashboardPage() {
   async function loadDashboard() {
     setLoading(true)
     try {
-      const [statsData, weeklyData, activityData, todayData] = await Promise.all([
-        dashboardService.getStats(),
-        dashboardService.getWeeklyChart(),
-        dashboardService.getRecentActivity(),
-        attendanceService.getToday(),
-      ])
-      setStats(statsData)
-      setWeekly(weeklyData)
-      setActivity(activityData)
-      setTodayStatus(todayData)
+      if (isAdmin) {
+        const [statsData, weeklyData, activityData, todayData] = await Promise.all([
+          dashboardService.getStats(),
+          dashboardService.getWeeklyChart(),
+          dashboardService.getRecentActivity(),
+          attendanceService.getToday(),
+        ])
+        setStats(statsData)
+        setWeekly(weeklyData)
+        setActivity(activityData)
+        setTodayStatus(todayData)
+      } else {
+        const [todayData, myRecords] = await Promise.all([
+          attendanceService.getToday(),
+          attendanceService.getMyAttendance(),
+        ])
+        const today = new Date().toISOString().slice(0, 10)
+        const todayRecord = myRecords.find(record => record.date === today)
+        setStats({
+          total_employees: 1,
+          present_today: todayRecord ? 1 : 0,
+          absent_today: todayRecord ? 0 : 1,
+          late_today: todayRecord?.status === 'late' ? 1 : 0,
+          on_leave: 0,
+          avg_checkin_time: todayRecord?.check_in ? formatTime(todayRecord.check_in) : 'â€”',
+          attendance_rate: myRecords.length ? 100 : 0,
+        })
+        setWeekly(buildPersonalWeekly(myRecords))
+        setActivity(buildPersonalActivity(myRecords, user))
+        setTodayStatus(todayData)
+      }
     } catch {
       toast.error('Unable to load dashboard data.')
     } finally {
@@ -69,7 +90,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadDashboard()
-  }, [])
+  }, [isAdmin])
 
   async function handleCheckInOut() {
     setCheckInLoading(true)
@@ -132,12 +153,12 @@ export default function DashboardPage() {
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label="Total Employees"
+          label={isAdmin ? 'Total Employees' : 'Your Profile'}
           value={stats.total_employees}
           icon={Users}
           iconColor="text-brand-600"
           iconBg="bg-brand-50 dark:bg-brand-900/30"
-          sub="Across all departments"
+          sub={isAdmin ? 'Across all departments' : user?.department || 'Unassigned'}
         />
         <StatCard
           label="Present Today"
@@ -145,7 +166,7 @@ export default function DashboardPage() {
           icon={UserCheck}
           iconColor="text-success-600"
           iconBg="bg-success-50 dark:bg-success-900/30"
-          sub={`${stats.attendance_rate}% attendance rate`}
+          sub={isAdmin ? `${stats.attendance_rate}% attendance rate` : 'Your attendance today'}
           trend={4}
         />
         <StatCard
@@ -154,7 +175,7 @@ export default function DashboardPage() {
           icon={UserX}
           iconColor="text-danger-600"
           iconBg="bg-danger-50 dark:bg-danger-900/30"
-          sub={`${stats.on_leave} on approved leave`}
+          sub={isAdmin ? `${stats.on_leave} on approved leave` : 'For today'}
           trend={-2}
         />
         <StatCard
@@ -163,7 +184,7 @@ export default function DashboardPage() {
           icon={Clock}
           iconColor="text-warning-600"
           iconBg="bg-warning-50 dark:bg-warning-900/30"
-          sub={`Avg check-in: ${stats.avg_checkin_time}`}
+          sub={isAdmin ? `Avg check-in: ${stats.avg_checkin_time}` : `Check-in: ${stats.avg_checkin_time}`}
         />
       </div>
 
@@ -226,7 +247,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between px-5 py-4 border-b border-surface-100 dark:border-surface-700">
           <div className="flex items-center gap-2">
             <span className="live-dot" />
-            <h2 className="text-sm font-semibold text-surface-800 dark:text-surface-200">Live Activity</h2>
+              <h2 className="text-sm font-semibold text-surface-800 dark:text-surface-200">{isAdmin ? 'Live Activity' : 'Your Activity'}</h2>
           </div>
           <button className="btn-ghost btn-sm gap-1.5">
             <RefreshCw size={13} />
@@ -260,4 +281,42 @@ function getGreeting() {
   if (h < 12) return 'morning'
   if (h < 17) return 'afternoon'
   return 'evening'
+}
+
+function buildPersonalWeekly(records) {
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date()
+    date.setDate(date.getDate() - (6 - index))
+    const key = date.toISOString().slice(0, 10)
+    const present = records.some(record => record.date === key) ? 1 : 0
+
+    return {
+      day: date.toLocaleDateString(undefined, { weekday: 'short' }),
+      present,
+      absent: present ? 0 : 1,
+    }
+  })
+}
+
+function buildPersonalActivity(records, user) {
+  return records.flatMap((record) => {
+    const employee = record.employee || user || { name: 'You', department: 'Unassigned' }
+    const events = record.check_in ? [{
+      id: `${record.id}-in`,
+      employee,
+      type: 'check_in',
+      time: record.check_in,
+    }] : []
+
+    if (record.check_out) {
+      events.push({
+        id: `${record.id}-out`,
+        employee,
+        type: 'check_out',
+        time: record.check_out,
+      })
+    }
+
+    return events
+  }).sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10)
 }

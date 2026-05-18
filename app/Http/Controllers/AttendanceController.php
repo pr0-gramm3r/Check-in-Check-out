@@ -50,11 +50,6 @@ class AttendanceController extends Controller
     // Admin Dashboard
     public function adminDashboard()
     {
-        // Access control first
-        if (!in_array(auth()->user()->email, ['raj@gmail.com', 'ayush123@gmail.com'])) {
-            return redirect('/dashboard')->with('error', 'You do not have manager access.');
-        }
-
         // Database-neutral monthly totals, compatible with MySQL and PostgreSQL.
         $monthlyReportRows = \App\Models\Attendance::with('user')
             ->whereNotNull('check_out')

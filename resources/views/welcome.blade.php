@@ -35,8 +35,7 @@
     <nav >
         
         
-        {{-- Only show this link if the logged-in user's ID is 1 --}}
-        @if(in_array(auth()->user()->email, ['raj@gmail.com', 'ayush123@gmail.com'])){{--These two emails got the admin privillage u can change it later accordingly  --}}
+        @if(auth()->user()->isAdmin())
             <a href="{{ route('admin.dashboard') }}" style="color: red; font-weight: bold; font-size: 25px; padding: 0px 0px 0px 42px;">Manager Panel</a>
         @endif
     </nav>

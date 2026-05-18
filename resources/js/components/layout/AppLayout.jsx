@@ -12,17 +12,18 @@ import { cn } from '@/utils/helpers'
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/attendance',  icon: Clock,           label: 'Attendance' },
-  { to: '/employees',   icon: Users,           label: 'Employees' },
-  { to: '/departments', icon: Building2,       label: 'Departments' },
-  { to: '/reports',     icon: BarChart3,       label: 'Reports' },
-  { to: '/settings',    icon: Settings,        label: 'Settings' },
+  { to: '/attendance',  icon: Clock,           label: 'Attendance', adminOnly: true },
+  { to: '/employees',   icon: Users,           label: 'Employees', adminOnly: true },
+  { to: '/departments', icon: Building2,       label: 'Departments', adminOnly: true },
+  { to: '/reports',     icon: BarChart3,       label: 'Reports', adminOnly: true },
+  { to: '/settings',    icon: Settings,        label: 'Settings', adminOnly: true },
 ]
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { user, logout, isAdmin } = useAuth()
   const { toggle, isDark } = useTheme()
+  const visibleNavItems = navItems.filter(item => !item.adminOnly || isAdmin)
 
   return (
     <div className="flex h-screen overflow-hidden bg-surface-50 dark:bg-surface-950">
@@ -55,7 +56,7 @@ export default function AppLayout() {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ to, icon: Icon, label }) => (
+          {visibleNavItems.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               to={to}

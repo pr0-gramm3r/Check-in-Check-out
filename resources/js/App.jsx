@@ -19,6 +19,13 @@ function ProtectedRoute({ children }) {
   return isAuthenticated ? children : <Navigate to="/login" replace />
 }
 
+function AdminRoute({ children }) {
+  const { isAuthenticated, isAdmin, loading } = useAuth()
+  if (loading) return null
+  if (!isAuthenticated) return <Navigate to="/login" replace />
+  return isAdmin ? children : <Navigate to="/dashboard" replace />
+}
+
 function GuestRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
   if (loading) return null
@@ -39,11 +46,11 @@ export default function App() {
             <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard"   element={<DashboardPage />} />
-              <Route path="attendance"  element={<AttendancePage />} />
-              <Route path="employees"   element={<EmployeesPage />} />
-              <Route path="departments" element={<DepartmentsPage />} />
-              <Route path="reports"     element={<ReportsPage />} />
-              <Route path="settings"    element={<SettingsPage />} />
+              <Route path="attendance"  element={<AdminRoute><AttendancePage /></AdminRoute>} />
+              <Route path="employees"   element={<AdminRoute><EmployeesPage /></AdminRoute>} />
+              <Route path="departments" element={<AdminRoute><DepartmentsPage /></AdminRoute>} />
+              <Route path="reports"     element={<AdminRoute><ReportsPage /></AdminRoute>} />
+              <Route path="settings"    element={<AdminRoute><SettingsPage /></AdminRoute>} />
               <Route path="profile"     element={<ProfilePage />} />
             </Route>
 

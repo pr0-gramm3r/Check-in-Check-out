@@ -13,7 +13,6 @@ const profileSchema = z.object({
   name:     z.string().min(2, 'Name required'),
   email:    z.string().email('Valid email required'),
   phone:    z.string().optional(),
-  role:     z.string().optional(),
 })
 
 const passwordSchema = z.object({
@@ -37,7 +36,6 @@ export default function ProfilePage() {
       name:  user?.name  || '',
       email: user?.email || '',
       phone: user?.phone || '',
-      role:  user?.role  || '',
     },
   })
 
@@ -178,7 +176,7 @@ export default function ProfilePage() {
                 <label className="block text-sm font-medium text-surface-700 dark:text-surface-300">Role / Designation</label>
                 <div className="relative">
                   <Briefcase size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
-                  <input className="input pl-9" placeholder="e.g. Senior Developer" {...rP('role')} />
+                  <input className="input pl-9 bg-surface-50 dark:bg-surface-800" value={user?.role || 'Employee'} readOnly />
                 </div>
               </div>
             </div>
