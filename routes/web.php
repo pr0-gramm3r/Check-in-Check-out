@@ -34,10 +34,11 @@ Route::prefix('api')->group(function () {
         }
 
         $request->session()->regenerate();
+        Auth::user()->ensureConfiguredAdminRole();
 
         return response()->json([
             'token' => $request->session()->getId(),
-            'user' => AttendiqPayload::user(Auth::user()->load('departmentModel')),
+            'user' => AttendiqPayload::user(Auth::user()->fresh('departmentModel')),
         ]);
     });
 
@@ -66,6 +67,7 @@ Route::prefix('api')->group(function () {
             'joined' => Carbon::today(),
             'password' => Hash::make($data['password']),
         ]);
+        $user->ensureConfiguredAdminRole();
 
         Auth::login($user);
         $request->session()->regenerate();
@@ -78,9 +80,11 @@ Route::prefix('api')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('/auth/me', function (Request $request) {
+            $request->user()->ensureConfiguredAdminRole();
+
             return response()->json([
                 'token' => $request->session()->getId(),
-                'user' => AttendiqPayload::user($request->user()->load('departmentModel')),
+                'user' => AttendiqPayload::user($request->user()->fresh('departmentModel')),
             ]);
         });
 

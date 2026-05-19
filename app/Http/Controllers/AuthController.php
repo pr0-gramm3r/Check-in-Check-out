@@ -17,6 +17,7 @@ class AuthController extends Controller
     function loginPost(Request $req){
         $credentials = $req->only("email","password");
         if(Auth::attempt($credentials)){
+            Auth::user()->ensureConfiguredAdminRole();
             return redirect()->intended(route("home"));
         }
         return redirect(route("login"))->with("error","Login Failed Try Again");
@@ -39,6 +40,7 @@ class AuthController extends Controller
             $user->email = $req->email;
             $user->password = hash::make($req->password);
             if($user->save()){
+                $user->ensureConfiguredAdminRole();
 
                 return redirect(route("login"))->with("success","User Created Successfully");
             }
