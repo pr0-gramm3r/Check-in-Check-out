@@ -32,7 +32,9 @@ class AttendiqPayload
             'phone' => $user->phone,
             'department' => $user->departmentModel?->name ?: $user->department ?: 'Unassigned',
             'department_id' => $user->department_id,
-            'role' => $user->role ?: 'Employee',
+            'role' => $user->isAdmin() && ! in_array(strtolower((string) $user->role), ['admin', 'manager'], true)
+                ? 'Admin'
+                : ($user->role ?: 'Employee'),
             'is_admin' => $user->isAdmin(),
             'status' => $user->status ?: 'active',
             'joined' => optional($user->joined ?: $user->created_at)->toDateString(),

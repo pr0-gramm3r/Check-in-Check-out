@@ -68,6 +68,10 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return in_array(strtolower((string) $this->role), ['admin', 'manager'], true);
+        $role = strtolower((string) $this->role);
+        $email = strtolower((string) $this->email);
+
+        return in_array($role, ['admin', 'manager'], true)
+            || in_array($email, config('admin.emails', []), true);
     }
 }
