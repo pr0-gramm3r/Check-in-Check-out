@@ -18,7 +18,7 @@ services:
           name: check-in-check-out
           property: host
       - key: ADMIN_EMAILS
-        value: admin@gmail.com,ayush123@gmail.com
+        value: admin@gmail.com,ayush123@gmail.com,dharampal@gmail.com
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
